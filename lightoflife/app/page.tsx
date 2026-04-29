@@ -122,14 +122,25 @@ export default function Home() {
           </div>
 
           <div className={styles.heroVisual} aria-hidden="true">
-            <div className={styles.heroCard}>
-              <Image
-                src="/congregation.jpg"
-                alt="Congregation"
-                fill
-                className={styles.heroImage}
-                priority
-              />
+            <div className={styles.heroStack}>
+              <div className={styles.heroCard}>
+                <Image
+                  src="/congregation.jpg"
+                  alt="Congregation"
+                  fill
+                  className={styles.heroImage}
+                  priority
+                />
+              </div>
+
+              <div className={styles.heroAccentCard}>
+                <Image
+                  src="/dove.jpeg"
+                  alt="Dove symbol"
+                  fill
+                  className={styles.heroImage}
+                />
+              </div>
             </div>
           </div>
         </section>

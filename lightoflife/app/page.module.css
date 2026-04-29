@@ -418,17 +418,55 @@
   justify-content: center;
 }
 
+.heroStack {
+  position: relative;
+  width: min(100%, 520px);
+  min-height: 520px;
+  display: block;
+}
+
 .heroCard {
-  width: min(100%, 460px);
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 92%;
+  height: 100%;
   padding: 0;
   border-radius: 24px;
   background: var(--card-bg);
   border: 1px solid var(--surface-border);
   box-shadow: var(--card-shadow);
-  position: relative;
   overflow: hidden;
-  display: block;
-  min-height: 420px;
+  z-index: 10;
+}
+
+.heroAccentCard {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 60%;
+  aspect-ratio: 1.14;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.16);
+  transform: rotate(-4deg);
+  background: var(--card-bg);
+  z-index: 20;
+}
+
+.heroAccentCard::before {
+  content: "";
+  position: absolute;
+  top: -24px;
+  right: -24px;
+  width: calc(100% + 48px);
+  height: calc(100% + 48px);
+  background: transparent;
+  border-radius: 22px;
+  border: 1px solid rgba(59,130,246,0.08);
+  backdrop-filter: blur(6px);
+  z-index: 0;
 }
 
 .heroImage {
@@ -474,6 +512,11 @@
 
   .heroCopy h1 {
     max-width: 100%;
+  }
+
+  .heroStack {
+    width: min(100%, 460px);
+    min-height: 460px;
   }
 
   .heroStats {
@@ -522,5 +565,17 @@
   .heroCard {
     min-height: 320px;
     padding: 24px;
+  }
+
+  .heroStack {
+    width: 100%;
+    min-height: 360px;
+  }
+
+  .heroAccentCard {
+    width: 48%;
+    right: -8px;
+    bottom: 18px;
+    border-radius: 18px;
   }
 }
