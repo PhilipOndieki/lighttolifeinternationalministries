@@ -7,6 +7,7 @@ import styles from "./navbar.module.css";
 
 export default function Navbar() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -25,45 +26,73 @@ export default function Navbar() {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
+
   return (
     <header className={styles.navbar}>
       <Link className={styles.brand} href="/">
         <Image src="/logo.jpeg" alt="LightToLife" width={180} height={86} priority />
       </Link>
 
-      <nav className={styles.navLinks} aria-label="Primary navigation">
+      <button
+        className={styles.hamburger}
+        aria-label="Toggle navigation menu"
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className={styles.hamburgerLine}></span>
+        <span className={styles.hamburgerLine}></span>
+        <span className={styles.hamburgerLine}></span>
+      </button>
+
+      <nav className={`${styles.navLinks} ${isOpen ? styles.navLinksOpen : ""}`} aria-label="Primary navigation">
         <div className={styles.navItem}>
-          <Link className={styles.navLink} href="/#about">About Us</Link>
+          <Link className={styles.navLink} href="/#about" onClick={() => setIsOpen(false)}>About Us</Link>
           <ul className={styles.navSub} aria-label="About sub-menu">
-            <li><Link href="/#features">Mission</Link></li>
-            <li><Link href="/#about">About</Link></li>
-            <li><Link href="/#leadership">Team</Link></li>
+            <li><Link href="/#features" onClick={() => setIsOpen(false)}>Mission</Link></li>
+            <li><Link href="/#about" onClick={() => setIsOpen(false)}>About</Link></li>
+            <li><Link href="/#leadership" onClick={() => setIsOpen(false)}>Team</Link></li>
           </ul>
         </div>
 
         <div className={styles.navItem}>
-          <Link className={styles.navLink} href="/events">Events</Link>
+          <Link className={styles.navLink} href="/events" onClick={() => setIsOpen(false)}>Events</Link>
           <ul className={styles.navSub} aria-label="Events sub-menu">
-            <li><Link href="/events#calendar">Calendar</Link></li>
-            <li><Link href="/events#upcoming">Upcoming</Link></li>
+            <li><Link href="/events#calendar" onClick={() => setIsOpen(false)}>Calendar</Link></li>
+            <li><Link href="/events#upcoming" onClick={() => setIsOpen(false)}>Upcoming</Link></li>
           </ul>
         </div>
 
         <div className={styles.navItem}>
-          <Link className={styles.navLink} href="/projects">Projects</Link>
+          <Link className={styles.navLink} href="/projects" onClick={() => setIsOpen(false)}>Projects</Link>
           <ul className={styles.navSub} aria-label="Projects sub-menu">
-            <li><Link href="/projects#ongoing">Ongoing</Link></li>
-            <li><Link href="/projects#partners">Partners</Link></li>
+            <li><Link href="/projects#ongoing" onClick={() => setIsOpen(false)}>Ongoing</Link></li>
+            <li><Link href="/projects#partners" onClick={() => setIsOpen(false)}>Partners</Link></li>
           </ul>
         </div>
 
         <div className={styles.navItem}>
-          <Link className={styles.navLink} href="/news">News</Link>
+          <Link className={styles.navLink} href="/news" onClick={() => setIsOpen(false)}>News</Link>
           <ul className={styles.navSub} aria-label="News sub-menu">
-            <li><Link href="/news#blog">Blog</Link></li>
-            <li><Link href="/news#highlights">Highlights</Link></li>
-            <li><Link href="/news#gallery">Gallery</Link></li>
+            <li><Link href="/news#blog" onClick={() => setIsOpen(false)}>Blog</Link></li>
+            <li><Link href="/news#highlights" onClick={() => setIsOpen(false)}>Highlights</Link></li>
+            <li><Link href="/news#gallery" onClick={() => setIsOpen(false)}>Gallery</Link></li>
           </ul>
+        </div>
+
+        <div className={styles.navMobileActions}>
+          <Link className={styles.authLink} href="/login" onClick={() => setIsOpen(false)}>Login</Link>
+          <Link className={styles.authLink} href="/register" onClick={() => setIsOpen(false)}>Register</Link>
+          <Link className={styles.navButton} href="/#contact" onClick={() => setIsOpen(false)}>Support Us</Link>
         </div>
       </nav>
 

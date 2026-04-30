@@ -37,6 +37,7 @@
   border: 1px solid var(--surface-border);
   backdrop-filter: blur(12px);
   overflow: visible;
+  position: relative;
 }
 
 .brand {
@@ -45,6 +46,7 @@
   height: 64px;
   overflow: visible;
   position: relative;
+  z-index: 50;
 }
 
 .brand img {
@@ -55,10 +57,38 @@
   transform: translateY(-18px);
 }
 
+.hamburger {
+  display: none;
+  flex-direction: column;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 51;
+  gap: 6px;
+}
+
+.hamburgerLine {
+  width: 24px;
+  height: 2.5px;
+  background: var(--text-nav);
+  border-radius: 2px;
+  transition: all 300ms ease;
+}
+
 .navLinks {
   display: flex;
   gap: 20px;
   align-items: center;
+}
+
+.navMobileActions {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid var(--surface-border);
+  padding-top: 16px;
+  margin-top: 16px;
 }
 
 .navItem { position: relative; }
@@ -108,14 +138,76 @@
 .switchSlider {
   width: 46px; height: 20px; border-radius: 999px; display: inline-block;
   background: var(--button-secondary-bg); border: 1px solid var(--button-secondary-border);
+  position: relative;
 }
-.switchSlider::after { content: ""; position: absolute; left: 3px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
+.switchSlider::after { content: ""; position: absolute; left: 3px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: transform 180ms ease; }
 .switchInput:checked + .switchSlider::after { transform: translateX(26px); }
 
-.switchIcon { position: absolute; top: 50%; transform: translateY(-50%); font-size: 0.7rem; }
+.switchIcon { position: absolute; top: 50%; transform: translateY(-50%); font-size: 0.7rem; transition: opacity 180ms ease; }
 .sunIcon { right: 6px; }
 .moonIcon { left: 6px; }
 .switchInput:checked + .switchSlider .sunIcon { opacity: 0.45; }
 .switchInput:checked + .switchSlider .moonIcon { opacity: 1; }
 .switchInput:not(:checked) + .switchSlider .sunIcon { opacity: 1; }
 .switchInput:not(:checked) + .switchSlider .moonIcon { opacity: 0.45; }
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .navLinks {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-top: none;
+    border-radius: 0 0 18px 18px;
+    padding: 20px;
+    gap: 16px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 300ms ease;
+    z-index: 49;
+  }
+
+  .navLinksOpen {
+    max-height: calc(100vh - 100px);
+  }
+
+  .navItem {
+    width: 100%;
+  }
+
+  .navItem:hover .navSub {
+    display: block;
+  }
+
+  .navSub {
+    position: static;
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 8px;
+    display: none;
+    min-width: unset;
+  }
+
+  .navMobileActions {
+    display: flex;
+  }
+
+  .navActions {
+    display: none;
+  }
+
+  .navbar {
+    height: auto;
+    min-height: 64px;
+  }
+}
