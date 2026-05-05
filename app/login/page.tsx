@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword } from "../lib/firebase";
+import { LogInWithEmailAndPassword } from "../lib/firebase";
 import Navbar from "../components/Navbar/Navbar";
 import styles from "./login.module.css";
 
@@ -23,7 +23,7 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      const { result, error: signInError } = await signInWithEmailAndPassword(email, password);
+      const { result, error: signInError } = await LogInWithEmailAndPassword(email, password);
 
       if (signInError) {
         throw signInError;
