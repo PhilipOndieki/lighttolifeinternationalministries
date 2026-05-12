@@ -26,7 +26,7 @@ export default function Home() {
             </p>
 
             <div className={styles.heroActions}>
-              <a className={styles.primaryButton} href="#features">
+              <a className={styles.primaryButton} href="/donate">
                 Support us
               </a>
               <a className={styles.secondaryButton} href="#about">
@@ -36,12 +36,12 @@ export default function Home() {
 
             <div className={styles.heroStats}>
               <div>
-                <strong>2000+</strong>
+                <strong>200+</strong>
                 <span>Students sponsored</span>
               </div>
               <div>
-                <strong>15+</strong>
-                <span>Nations Reached</span>
+                <strong>10+</strong>
+                <span>Countries Reached</span>
               </div>
               <div>
                 <strong>100%</strong>
@@ -54,7 +54,7 @@ export default function Home() {
             <div className={styles.heroStack}>
               <div className={styles.heroCard}>
                 <Image
-                  src="/praise four.jpeg"
+                  src="/hero.jpeg"
                   alt="Congregation"
                   fill
                   className={styles.heroImage}
@@ -156,12 +156,12 @@ export default function Home() {
                 </p>
                 <div className={styles.aboutHighlights}>
                   <div className={styles.highlight}>
-                    <strong>2,000+</strong>
+                    <strong>200+</strong>
                     <span>Students Sponsored</span>
                   </div>
                   <div className={styles.highlight}>
-                    <strong>15+</strong>
-                    <span>Nations Reached</span>
+                    <strong>10+</strong>
+                    <span>Countries Reached</span>
                   </div>
                   <div className={styles.highlight}>
                     <strong>100%</strong>
@@ -171,9 +171,12 @@ export default function Home() {
               </div>
               <div className={styles.aboutImage}>
                 <div className={styles.imageBox}>
-                  <div className={styles.imagePlaceholder}>
-                    <span>Church Community Image</span>
-                  </div>
+                  <Image
+                    src="/congregation.jpg"
+                    alt="Congregation"
+                    fill
+                    className={styles.leaderImage}
+                  />
                 </div>
               </div>
             </div>
@@ -195,17 +198,17 @@ export default function Home() {
                 <div className={styles.leaderImageBox}>
                   <Image
                     src="/Bishop Francis Akaki.jpeg"
-                    alt="Pastor Rebecca Okonkwo"
+                    alt="Bishop Francis Akaki Obae"
                     fill
                     className={styles.leaderImage}
                   />
                 </div>
 
                 <div className={styles.leaderInfo}>
-                  <h3 className={styles.leaderName}>Pastor Rebecca Okonkwo</h3>
-                  <p className={styles.leaderRole}>Women's Ministry Director</p>
+                  <h3 className={styles.leaderName}>Bishop Francis Akaki Obae</h3>
+                  <p className={styles.leaderRole}>Senior Bishop & Founder</p>
                   <p className={styles.leaderBio}>
-                    Passionate about empowering women and strengthening families through faith-based programs and mentorship.
+                    Visionary leader and founder of Light to Life International Ministries, dedicated to spreading God's kingdom across nations.
                   </p>
                 </div>
               </div>
@@ -213,18 +216,18 @@ export default function Home() {
               <div className={styles.leaderCard}>
                 <div className={styles.leaderImageBox}>
                   <Image
-                    src="/Bishop Francis Akaki.jpeg"
-                    alt="Pastor Rebecca Okonkwo"
+                    src="/maisiba.png"
+                    alt="Pastor Charles Maisiba"
                     fill
                     className={styles.leaderImage}
                   />
                 </div>
 
                 <div className={styles.leaderInfo}>
-                  <h3 className={styles.leaderName}>Pastor Rebecca Okonkwo</h3>
-                  <p className={styles.leaderRole}>Women's Ministry Director</p>
+                  <h3 className={styles.leaderName}>Pastor Charles Maisiba</h3>
+                  <p className={styles.leaderRole}>Senior Pastor & Deputy Director</p>
                   <p className={styles.leaderBio}>
-                    Passionate about empowering women and strengthening families through faith-based programs and mentorship.
+                    Dedicated to pastoral care, spiritual counseling, and overseeing day-to-day ministry operations and church growth.
                   </p>
                 </div>
               </div>
@@ -232,17 +235,17 @@ export default function Home() {
               <div className={styles.leaderCard}>
                 <div className={styles.leaderImageBox}>
                   <Image
-                    src="/Bishop Francis Akaki.jpeg"
-                    alt="Pastor Rebecca Okonkwo"
+                    src="/pastor Nyarongo.png"
+                    alt="Pastor Nicholas Nyarongo"
                     fill
                     className={styles.leaderImage}
                   />
                 </div>
                 <div className={styles.leaderInfo}>
-                  <h3 className={styles.leaderName}>Dr. Samuel Adeyemi</h3>
+                  <h3 className={styles.leaderName}>Pastor Nicholas Nyarongo</h3>
                   <p className={styles.leaderRole}>Education & Outreach Director</p>
                   <p className={styles.leaderBio}>
-                    A dedicated educator overseeing scholarship programs and educational initiatives for underprivileged youth.
+                    A visionary educator overseeing scholarship programs and educational initiatives for underprivileged youth across the globe.
                   </p>
                 </div>
               </div>
@@ -250,14 +253,14 @@ export default function Home() {
               <div className={styles.leaderCard}>
                 <div className={styles.leaderImageBox}>
                   <div className={styles.imagePlaceholder}>
-                    <span>Leader Image</span>
+                    <span>Team Member Image</span>
                   </div>
                 </div>
                 <div className={styles.leaderInfo}>
-                  <h3 className={styles.leaderName}>Pastor Michael Afolayan</h3>
-                  <p className={styles.leaderRole}>Youth Pastor</p>
+                  <h3 className={styles.leaderName}>Pastor Rebecca Okonkwo</h3>
+                  <p className={styles.leaderRole}>Women's Ministry Director</p>
                   <p className={styles.leaderBio}>
-                    Devoted to reaching and mentoring the next generation, fostering spiritual development and leadership in youth.
+                    Passionate about empowering women and strengthening families through faith-based programs and spiritual mentorship.
                   </p>
                 </div>
               </div>

@@ -3,28 +3,56 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { applyTheme, getStoredTheme, type Theme } from "@/app/lib/theme";
 import styles from "./navbar.module.css";
 
 export default function Navbar() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const router = useRouter();
+  const [theme, setTheme] = useState<Theme>("light");
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
-    const root = document.documentElement;
-    const initialTheme =
-      root.dataset.theme === "dark" || root.dataset.theme === "light"
-        ? (root.dataset.theme as "light" | "dark")
-        : window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light";
+    let unsub: any = null;
+    (async () => {
+      try {
+        await import("@/app/lib/firebase/config");
+        const firebaseAuth = await import("firebase/auth");
+        const auth = firebaseAuth.getAuth();
+        unsub = firebaseAuth.onAuthStateChanged(auth, (currentUser) => {
+          setUser(currentUser);
+          setAuthLoading(false);
+        });
+      } catch (e) {
+        console.error("Navbar auth init error:", e);
+        setAuthLoading(false);
+      }
+    })();
 
-    setTheme(initialTheme);
-    root.dataset.theme = initialTheme;
+    return () => {
+      if (unsub) unsub();
+    };
   }, []);
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-  }, [theme]);
+    const initialTheme = getStoredTheme();
+    setTheme(initialTheme);
+    applyTheme(initialTheme);
+  }, []);
+
+  useEffect(() => {
+    const handleThemeChange = (event: Event) => {
+      const nextTheme = (event as CustomEvent<Theme>).detail;
+      if (nextTheme === "light" || nextTheme === "dark") {
+        setTheme(nextTheme);
+      }
+    };
+
+    window.addEventListener("themechange", handleThemeChange);
+    return () => window.removeEventListener("themechange", handleThemeChange);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -90,23 +118,73 @@ export default function Navbar() {
         </div>
 
         <div className={styles.navMobileActions}>
-          <Link className={styles.authLink} href="/login" onClick={() => setIsOpen(false)}>Login</Link>
-          <Link className={styles.authLink} href="/register" onClick={() => setIsOpen(false)}>Register</Link>
-          <Link className={styles.navButton} href="/#contact" onClick={() => setIsOpen(false)}>Support Us</Link>
+          {!authLoading && !user ? (
+            <>
+              <Link className={styles.authLink} href="/login" onClick={() => setIsOpen(false)}>Login</Link>
+              <Link className={styles.authLink} href="/register" onClick={() => setIsOpen(false)}>Register</Link>
+            </>
+          ) : !authLoading && user ? (
+            <button
+              className={styles.authLink}
+              onClick={async () => {
+                try {
+                  await import("@/app/lib/firebase/config");
+                  const firebaseAuth = await import("firebase/auth");
+                  const auth = firebaseAuth.getAuth();
+                  await firebaseAuth.signOut(auth);
+                } catch (e) {
+                  console.error("Navbar logout error:", e);
+                }
+                setIsOpen(false);
+                router.push("/");
+              }}
+            >
+              Logout
+            </button>
+          ) : null}
+          <Link className={styles.navButton} href="/donate" onClick={() => setIsOpen(false)}>Support Us</Link>
         </div>
       </nav>
 
       <div className={styles.navActions}>
-        <Link className={styles.authLink} href="/login">Login</Link>
-        <Link className={styles.authLink} href="/register">Register</Link>
-        <Link className={styles.navButton} href="/#contact">Support Us</Link>
+        {!authLoading && !user ? (
+          <>
+            <Link className={styles.authLink} href="/login">Login</Link>
+            <Link className={styles.authLink} href="/register">Register</Link>
+          </>
+        ) : !authLoading && user ? (
+          <Link className={styles.authLink} href="/dashboard">Dashboard</Link>
+        ) : null}
+        <Link className={styles.navButton} href="/donate">Support Us</Link>
 
+        {user && !authLoading && (
+          <button
+            className={styles.authLink}
+            onClick={async () => {
+              try {
+                await import("@/app/lib/firebase/config");
+                const firebaseAuth = await import("firebase/auth");
+                const auth = firebaseAuth.getAuth();
+                await firebaseAuth.signOut(auth);
+              } catch (e) {
+                console.error("Navbar logout error:", e);
+              }
+              router.push("/");
+            }}
+          >
+            Logout
+          </button>
+        )}
         <label className={styles.switch}>
           <input
             type="checkbox"
             className={styles.switchInput}
             checked={theme === "dark"}
-            onChange={() => setTheme(theme === "light" ? "dark" : "light")}
+            onChange={() => {
+              const nextTheme: Theme = theme === "light" ? "dark" : "light";
+              setTheme(nextTheme);
+              applyTheme(nextTheme);
+            }}
             aria-label={theme === "light" ? "Enable dark theme" : "Enable light theme"}
           />
           <span className={styles.switchSlider}>

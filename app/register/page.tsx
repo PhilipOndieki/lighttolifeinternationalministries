@@ -6,8 +6,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar/Navbar";
 import styles from "./register.module.css";
-import { auth } from "../lib/firebase";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+// use dynamic imports for firebase to ensure initialization
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -30,11 +29,14 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const fb = await import("@/app/lib/firebase");
+      const firebaseAuth = await import("firebase/auth");
+      const authObj = fb.auth;
+      const userCredential = await firebaseAuth.createUserWithEmailAndPassword(authObj, email, password);
       if (userCredential.user) {
-        await updateProfile(userCredential.user, { displayName: name });
+        await firebaseAuth.updateProfile(userCredential.user, { displayName: name });
       }
-      router.push("/");
+      router.push("/dashboard");
     } catch (err: any) {
       setError(err?.message || "Registration failed");
     } finally {
