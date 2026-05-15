@@ -5,14 +5,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { DashboardLoading } from "./loading";
 import styles from "./dashboard.module.css";
+import ImageUpload from "@/app/components/ImageUpload/ImageUpload";
 
 export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [usersList, setUsersList] = useState<any[]>([]);
-  const [currentUserRole, setCurrentUserRole] = useState<string | null>(null);
-  const [loadingUsers, setLoadingUsers] = useState(false);
 
   useEffect(() => {
     let unsub: any = null;
@@ -25,20 +23,6 @@ export default function DashboardPage() {
         unsub = firebaseAuth.onAuthStateChanged(auth, async (u) => {
           if (u) {
             setUser(u);
-            // fetch user's role from Firestore users collection
-            try {
-              const { db } = await import("@/app/lib/firebase/config");
-              const fstore = await import("firebase/firestore");
-              const userDoc = await fstore.getDoc(fstore.doc(db, "users", u.uid));
-              if (userDoc && userDoc.exists()) {
-                const data: any = userDoc.data();
-                setCurrentUserRole(data.role || null);
-              } else {
-                setCurrentUserRole(null);
-              }
-            } catch (e) {
-              setCurrentUserRole(null);
-            }
           } else {
             router.push("/login");
           }
@@ -107,7 +91,7 @@ export default function DashboardPage() {
         <main className={styles.main}>
           <header className={styles.header}>
             <div>
-              <h1>Welcome back, {user.displayName || user.email}! 👋</h1>
+              <h1>Welcome back, {user?.displayName || user?.email}! 👋</h1>
               <p>Manage your missionary website and community</p>
             </div>
           </header>
@@ -134,6 +118,13 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className={styles.content}>
+            <section className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <h2>🖼️ Image Library</h2>
+                <p className={styles.sectionSubtitle}>Upload images and select them later in other dashboard sections.</p>
+              </div>
+              <ImageUpload />
+            </section>
             <section className={styles.section}>
               <div className={styles.sectionHeader}>
                 <h2>📝 Manage Site</h2>

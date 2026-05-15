@@ -148,6 +148,20 @@ export interface Project {
   updatedAt?: any;
 }
 
+export interface DashboardImage {
+  id?: string;
+  url: string;
+  publicId: string;
+  fileName: string;
+  format?: string;
+  width?: number;
+  height?: number;
+  bytes?: number;
+  uploadedBy?: string;
+  createdAt?: any;
+  updatedAt?: any;
+}
+
 // BLOGS
 export const createBlog = async (blog: BlogPost) => {
   if (useMock) return createMock("mock_blogs", blog) as BlogPost & { id: string };
@@ -376,5 +390,55 @@ export const getProjectById = async (id: string) => {
     console.error("Error fetching project:", error);
     if (typeof window !== "undefined") return getByIdMock("mock_projects", id) as Project & { id: string } | null;
     return null;
+  }
+};
+
+// DASHBOARD IMAGES
+const DASHBOARD_IMAGES_KEY = "mock_dashboard_images";
+
+export const createDashboardImage = async (image: Omit<DashboardImage, "id" | "createdAt" | "updatedAt">) => {
+  if (useMock) return createMock(DASHBOARD_IMAGES_KEY, image) as DashboardImage & { id: string };
+
+  try {
+    const docRef = await addDoc(collection(db, "dashboardImages"), {
+      ...image,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    return { id: docRef.id, ...image };
+  } catch (error) {
+    console.error("Error creating dashboard image:", error);
+    if (typeof window !== "undefined") return createMock(DASHBOARD_IMAGES_KEY, image) as DashboardImage & { id: string };
+    throw error;
+  }
+};
+
+export const getAllDashboardImages = async () => {
+  if (useMock) return getAllMock(DASHBOARD_IMAGES_KEY) as (DashboardImage & { id: string })[];
+
+  try {
+    const q = query(collection(db, "dashboardImages"), orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as (DashboardImage & { id: string })[];
+  } catch (error) {
+    console.error("Error fetching dashboard images:", error);
+    if (typeof window !== "undefined") return getAllMock(DASHBOARD_IMAGES_KEY) as (DashboardImage & { id: string })[];
+    return [];
+  }
+};
+
+export const deleteDashboardImage = async (id: string) => {
+  if (useMock) return deleteMock(DASHBOARD_IMAGES_KEY, id);
+
+  try {
+    await deleteDoc(doc(db, "dashboardImages", id));
+    return id;
+  } catch (error) {
+    console.error("Error deleting dashboard image:", error);
+    if (typeof window !== "undefined") return deleteMock(DASHBOARD_IMAGES_KEY, id);
+    throw error;
   }
 };

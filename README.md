@@ -20,6 +20,16 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Cloudinary Image Uploads
+
+The dashboard image library expects these environment variables for unsigned Cloudinary uploads:
+
+- `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`
+- `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET`
+- `NEXT_PUBLIC_CLOUDINARY_FOLDER` (optional)
+
+Create an unsigned upload preset in Cloudinary before using the dashboard upload section.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

@@ -62,14 +62,14 @@ export default function Home() {
                 />
               </div>
 
-              <div className={styles.heroAccentCard}>
+              {/* <div className={styles.heroAccentCard}>
                 <Image
                   src="/dove.jpeg"
                   alt="Dove symbol"
                   fill
                   className={styles.heroImage}
                 />
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
@@ -221,7 +221,7 @@ export default function Home() {
                 </div>
 
                 <div className={styles.leaderInfo}>
-                  <h3 className={styles.leaderName}>Rev. Charles Maisiba</h3>
+                  <h3 className={styles.leaderName}>Rev. Charles Mayore</h3>
                   <p className={styles.leaderRole}>Senior Pastor & Deputy Director</p>
                   <p className={styles.leaderBio}>
                     Dedicated to pastoral care, spiritual counseling, and overseeing day-to-day ministry operations and church growth.
@@ -232,7 +232,7 @@ export default function Home() {
               <div className={styles.leaderCard}>
                 <div className={styles.leaderImageBox}>
                   <Image
-                    src="/pastor Nyarongo.png"
+                    src="/Nyarongo.png"
                     alt="Pastor Nicholas Nyarongo"
                     fill
                     className={styles.leaderImage}
