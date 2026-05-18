@@ -9,6 +9,7 @@ import styles from "./page.module.css";
 
 type TeamBranchDetail = {
   uid: string;
+  branchKey?: string;
   displayName: string;
   branchLocation: string;
   branchAddress?: string;
@@ -123,8 +124,23 @@ export default function TeamMemberBranchPage() {
           <h1>{member.branchLocation}</h1>
           <p className={styles.heroSubtitle}>{member.branchAddress}</p>
           <div className={styles.heroMeta}>
-            {member.phoneNumber && <span>{member.phoneNumber}</span>}
-            {member.email && <span>{member.email}</span>}
+            {member.phoneNumber && (
+              <a className={styles.ctaButton} href={`tel:${member.phoneNumber.replace(/\s+/g, "")}`}>Call</a>
+            )}
+            {member.email && (
+              <a className={styles.ctaButton} href={`mailto:${member.email}`}>Email</a>
+            )}
+            {member.branchAddress && (
+              <a
+                className={styles.ctaButton}
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(member.branchAddress)}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Directions
+              </a>
+            )}
+            {member.branchKey ? <span className={styles.branchKey}>ID: {member.branchKey}</span> : null}
           </div>
         </div>
         <div className={styles.heroImage}>

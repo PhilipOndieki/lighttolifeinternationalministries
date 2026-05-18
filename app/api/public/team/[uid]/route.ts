@@ -173,6 +173,7 @@ export async function GET(_request: NextRequest, context: { params: Promise<{ ui
     const mergedMember = member
       ? {
           uid: member.uid,
+          branchKey: member.branchKey || branchData?.branchKey || normalizedParams || member.uid,
           displayName: member.displayName || branchData?.branchLocation || "Branch Leader",
           branchLocation: member.branchLocation || branchData?.branchLocation || "Church Branch",
           branchAddress: member.branchAddress || branchData?.branchAddress || "",
@@ -201,6 +202,7 @@ export async function GET(_request: NextRequest, context: { params: Promise<{ ui
         }
       : {
           uid: branchData?.branchKey || normalizedParams || routeUid,
+          branchKey: branchData?.branchKey || normalizedParams || routeUid,
           displayName: branchData?.branchLocation || "Branch Leader",
           branchLocation: branchData?.branchLocation || "Church Branch",
           branchAddress: branchData?.branchAddress || "",
