@@ -669,36 +669,40 @@ export default function DashboardTeamPage() {
               </div>
             ) : (
               <div className={styles.teamGrid}>
-                {teamMembers.map((member) => (
-                  <article key={member.uid} className={styles.teamCard}>
-                    <div className={styles.teamCardHeader}>
-                      <div className={styles.memberIdentity}>
-                        <div className={styles.avatarWrap}>
-                          {member.pastorImageURL ? (
-                            <Image src={member.pastorImageURL} alt={member.displayName} fill sizes="62px" className={styles.avatarImage} />
-                          ) : (
-                            <span>{member.displayName?.[0]?.toUpperCase() || "T"}</span>
-                          )}
+                {teamMembers.map((member) => {
+                  if (!member) return null;
+
+                  return (
+                    <article key={member.uid} className={styles.teamCard}>
+                      <div className={styles.teamCardHeader}>
+                        <div className={styles.memberIdentity}>
+                          <div className={styles.avatarWrap}>
+                            {member.pastorImageURL ? (
+                              <Image src={member.pastorImageURL} alt={member.displayName} fill sizes="62px" className={styles.avatarImage} />
+                            ) : (
+                              <span>{member.displayName?.[0]?.toUpperCase() || "T"}</span>
+                            )}
+                          </div>
+                          <div>
+                            <h3 className={styles.teamCardTitle}>{member.displayName}</h3>
+                            <p className={styles.teamRole}>{member.branchLocation}</p>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className={styles.teamCardTitle}>{member.displayName}</h3>
-                          <p className={styles.teamRole}>{member.branchLocation}</p>
-                        </div>
+                        <span className={styles.badge}>Active</span>
                       </div>
-                      <span className={styles.badge}>Active</span>
-                    </div>
-                    <p className={styles.teamInfo}><strong>Email:</strong> {member.email}</p>
-                    {member.phoneNumber ? <p className={styles.teamInfo}><strong>Phone:</strong> {member.phoneNumber}</p> : null}
-                    <div className={styles.teamActions}>
-                      <button type="button" className={styles.editBtn} onClick={() => openEditForm(member)}>
-                        Edit
-                      </button>
-                      <button type="button" className={styles.deleteBtn} onClick={() => handleDelete(member)}>
-                        Delete
-                      </button>
-                    </div>
-                  </article>
-                ))}
+                      <p className={styles.teamInfo}><strong>Email:</strong> {member.email}</p>
+                      {member.phoneNumber ? <p className={styles.teamInfo}><strong>Phone:</strong> {member.phoneNumber}</p> : null}
+                      <div className={styles.teamActions}>
+                        <button type="button" className={styles.editBtn} onClick={() => openEditForm(member)}>
+                          Edit
+                        </button>
+                        <button type="button" className={styles.deleteBtn} onClick={() => handleDelete(member)}>
+                          Delete
+                        </button>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
             )}
 
