@@ -28,13 +28,13 @@ interface TeamMember {
   createdAt?: string;
 }
 
-type UserOption = {
-  id: string;
-  email: string;
-  displayName?: string;
-  role?: string;
-  branchLocation?: string;
-};
+// type UserOption = {
+//   id: string;
+//   email: string;
+//   displayName?: string;
+//   role?: string;
+//   branchLocation?: string;
+// };
 
 type TeamMemberForm = {
   displayName: string;
@@ -379,6 +379,11 @@ export default function DashboardTeamPage() {
       const url = creatingMember ? "/api/admin/team" : `/api/admin/team/${editingMember?.uid}`;
       const churchGalleryList = formData.churchGallery;
       const pastorGalleryList = formData.pastorGallery;
+      console.log("Submitting leadership data:", {
+        displayName: formData.displayName,
+        email: formData.email,
+        churchGalleryList: churchGalleryList
+      });
 
       console.log("Leadership submit payload:", {
         method: creatingMember ? "POST" : "PATCH",
