@@ -172,6 +172,14 @@
   box-shadow: 0 26px 80px rgba(15, 23, 42, 0.12);
 }
 
+/* Ensure Next/Image fill elements prioritize the top of the image (avoid cropping heads) */
+.heroImage img,
+.profileImage img,
+.profileIcon img {
+  object-fit: cover;
+  object-position: center top;
+}
+
 .timelineSection {
   margin-bottom: 32px;
 }

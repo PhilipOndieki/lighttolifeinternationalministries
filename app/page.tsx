@@ -163,11 +163,12 @@ export default function Home() {
 
         if (!mounted) return;
         const members = payload.members || [];
-        const orderedMembers = [...members]
-          .sort((left, right) => getBranchPriority(left) - getBranchPriority(right))
-          .slice(0, 3);
+        const ordered = [...members].sort((left, right) => getBranchPriority(left) - getBranchPriority(right));
+        // Prefer the Bishop (priority 0). If none present, fall back to the first ordered member.
+        const bishops = ordered.filter((m) => getBranchPriority(m) === 0);
+        const featured = bishops.length ? [bishops[0]] : ordered.length ? [ordered[0]] : [];
 
-        setFeaturedFounders(orderedMembers);
+        setFeaturedFounders(featured);
         setActiveFounderIndex(0);
       } catch (error) {
         console.error("Error loading founder spotlight:", error);
@@ -299,34 +300,12 @@ export default function Home() {
           return (
           <section className={styles.founderSection} id="founder">
             <div className={styles.sectionContainer}>
-              <div className={styles.founderTabsWrap}>
-                <div className={styles.founderTabs} role="radiogroup" aria-label="Leadership branches">
-                  {featuredFounders.map((member, index) => {
-                    const isActive = member.uid === activeFounder?.uid;
-                    const tabId = `founder-tab-${member.uid}`;
-                    const panelId = `founder-panel-${member.uid}`;
-                    return (
-                      <div key={member.uid} className={styles.founderTabItem}>
-                        <input
-                          id={tabId}
-                          type="radio"
-                          name="featured-founder-tab"
-                          className={styles.founderTabInput}
-                          checked={isActive}
-                          onChange={() => setActiveFounderIndex(index)}
-                          aria-controls={panelId}
-                          aria-label={member.displayName || `Leader ${index + 1}`}
-                        />
-                        <label
-                          htmlFor={tabId}
-                          className={`${styles.founderTab} ${isActive ? styles.founderTabActive : ""}`}
-                        >
-                          <span className={styles.founderTabName}>{member.displayName || `Leader ${index + 1}`}</span>
-                        </label>
-                      </div>
-                    );
-                  })}
-                </div>
+              <div className={styles.founderHeader}>
+                <p className={styles.spotlightPre}>Spotlight</p>
+                <h2 className={styles.spotlightTitle}>
+                  Bishop <span className={styles.spotlightName}>Francis Akaki</span>
+                </h2>
+                <p className={styles.spotlightSub}>Championing faith, service, and community impact</p>
               </div>
               <div aria-live="polite" aria-atomic="true" className={styles.visuallyHidden}>{announcement}</div>
 

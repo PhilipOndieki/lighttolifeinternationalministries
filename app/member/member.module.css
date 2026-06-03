@@ -1,0 +1,51 @@
+.section {
+  background: #f7f9fc;
+  padding: 60px 20px;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  gap: 30px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #1f2937;
+  border-left: 4px solid #2563eb;
+  padding-left: 10px;
+}
+
+.subtitle {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #2563eb;
+}
+
+.text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #4b5563;
+  margin-bottom: 12px;
+}
+
+/* Responsive layout */
+@media (min-width: 768px) {
+  .container {
+    grid-template-columns: 1fr 1fr;
+  }
+}

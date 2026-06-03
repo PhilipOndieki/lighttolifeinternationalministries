@@ -718,6 +718,45 @@
   margin-top: 48px;
 }
 
+.founderHeader {
+  margin-bottom: 18px;
+}
+
+.spotlightPre {
+  margin: 0 0 6px 0;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-blue);
+}
+
+.spotlightTitle {
+  margin: 0;
+  font-size: clamp(1.6rem, 3.6vw, 2.6rem);
+  line-height: 1.02;
+  font-weight: 900;
+  color: var(--text-main);
+  text-shadow: 0 6px 18px rgba(11,37,64,0.06);
+}
+
+.spotlightName {
+  display: inline-block;
+  margin-left: 8px;
+  color: #f97316; /* warm orange */
+  background: linear-gradient(90deg, rgba(249,115,22,0.12), rgba(249,115,22,0));
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+
+.spotlightSub {
+  margin: 6px 0 0 0;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
 /* Mobile-first founder card layout */
 .founderCard {
   display: grid;

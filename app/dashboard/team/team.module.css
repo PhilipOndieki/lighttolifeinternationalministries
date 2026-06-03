@@ -508,6 +508,122 @@
   gap: 16px;
 }
 
+.storySection {
+  grid-column: span 2;
+  display: grid;
+  gap: 18px;
+  padding: 20px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(255, 255, 255, 0.94));
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.storySectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.storySectionHeader h3 {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 1.15rem;
+}
+
+.storySectionHeader p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.storyGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.storyCard {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+}
+
+.storyCardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.storyCardHeader h4 {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 1rem;
+}
+
+.storyCardHeader span {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+.storyCard .formGroupWide {
+  grid-column: span 1;
+}
+
+.featureSection {
+  grid-column: span 2;
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(255, 255, 255, 0.94));
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.featureItem {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+}
+
+.featureSection .mediaSectionHeader {
+  margin-bottom: 2px;
+}
+
+.featureSection .mediaSectionHeader p {
+  margin: 0;
+}
+
+.featureBody,
+.featureMedia,
+.featureLabel,
+.featureRole {
+  display: block;
+}
+
+.stepInfo {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.08);
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
 .uploadButton {
   display: inline-flex;
   align-items: center;
@@ -697,6 +813,24 @@
     grid-column: span 1;
   }
 
+  .storySection,
+  .storyGrid {
+    grid-column: span 1;
+  }
+
+  .storyGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .featureSection,
+  .featureGrid {
+    grid-column: span 1;
+  }
+
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+
   .modalContent {
     padding: 22px;
   }
@@ -712,6 +846,23 @@
   .mediaGalleryPair {
     grid-template-columns: 1fr;
   }
+
+  .storySection {
+    padding: 16px;
+  }
+
+  .storyCard {
+    padding: 16px;
+  }
+
+  .featureSection {
+    padding: 16px;
+  }
+
+  .featureItem {
+    padding: 16px;
+  }
+
   .teamActions {
     flex-direction: column;
   }

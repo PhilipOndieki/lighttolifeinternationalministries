@@ -30,7 +30,16 @@ export default function Navbar() {
 
   const navItems = useMemo<NavItem[]>(
     () => [
-      {
+       {
+         label: "About",
+         href: "/#about",
+         subItems: [
+           { label: "Mission", href: "/#features" },
+          { label: "About", href: "/#about" },
+          { label: "Team", href: "/#leadership" },
+         ]
+       },
+        {
         label: "Leadership",
         href: "/#about",
         subItems: [

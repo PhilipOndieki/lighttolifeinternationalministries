@@ -151,6 +151,14 @@ export default function DashboardTeamPage() {
   const [creatingMember, setCreatingMember] = useState(false);
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [formData, setFormData] = useState<TeamMemberForm>(emptyForm());
+  const [step, setStep] = useState<number>(0);
+  const stepLabels: string[] = [
+    "Identity",
+    "Location & Contact",
+    "Profile & Media",
+    "History & Story",
+    "Teams",
+  ];
   const [authUsers, setAuthUsers] = useState<AuthUserOption[]>([]);
   const [loadingAuthUsers, setLoadingAuthUsers] = useState(false);
   const [selectedAuthUserId, setSelectedAuthUserId] = useState("");
@@ -257,6 +265,7 @@ export default function DashboardTeamPage() {
   const openEditForm = (member: TeamMember) => {
     setCreatingMember(false);
     setEditingMember(member);
+    setStep(0);
     const matchedUser = authUsers.find((item) => item.email.toLowerCase() === member.email.toLowerCase());
     setSelectedAuthUserId(matchedUser?.id || "");
     setFormData({
@@ -290,12 +299,14 @@ export default function DashboardTeamPage() {
   const closeEditor = () => {
     setCreatingMember(false);
     setEditingMember(null);
+    setStep(0);
     setFormData(emptyForm());
   };
 
   const openCreateForm = () => {
     setCreatingMember(true);
     setEditingMember(null);
+    setStep(0);
     setSelectedAuthUserId("");
     setFormData(emptyForm());
     requestAnimationFrame(() => {
@@ -746,76 +757,94 @@ export default function DashboardTeamPage() {
                       void handleSubmit();
                     }}
                   >
-                    <div className={styles.formGroup}>
-                      <label htmlFor="displayName">Full Name</label>
-                      <input id="displayName" type="text" value={formData.displayName} onChange={(event) => setFormData({ ...formData, displayName: event.target.value })} placeholder="Enter full name" />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="pastorTitle">Pastor Title</label>
-                      <input id="pastorTitle" type="text" value={formData.pastorTitle} onChange={(event) => setFormData({ ...formData, pastorTitle: event.target.value })} placeholder="Enter title, for example Lead Pastor" />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="authUserId">Select authenticated user</label>
-                      <select
-                        id="authUserId"
-                        value={selectedAuthUserId}
-                        onChange={(event) => {
-                          const nextUserId = event.target.value;
-                          setSelectedAuthUserId(nextUserId);
+                    {step === 0 && (
+                      <>
+                        <div className={styles.formGroup}>
+                          <label htmlFor="displayName">Full Name</label>
+                          <input id="displayName" type="text" value={formData.displayName} onChange={(event) => setFormData({ ...formData, displayName: event.target.value })} placeholder="Enter full name" />
+                        </div>
+                        <div className={styles.formGroup}>
+                          <label htmlFor="pastorTitle">Pastor Title</label>
+                          <input id="pastorTitle" type="text" value={formData.pastorTitle} onChange={(event) => setFormData({ ...formData, pastorTitle: event.target.value })} placeholder="Enter title, for example Lead Pastor" />
+                        </div>
+                        <div className={styles.formGroup}>
+                          <label htmlFor="authUserId">Select authenticated user</label>
+                          <select
+                            id="authUserId"
+                            value={selectedAuthUserId}
+                            onChange={(event) => {
+                              const nextUserId = event.target.value;
+                              setSelectedAuthUserId(nextUserId);
 
-                          if (!nextUserId) {
-                            return;
-                          }
+                              if (!nextUserId) {
+                                return;
+                              }
 
-                          const selectedUser = authUsers.find((item) => item.id === nextUserId);
-                          if (selectedUser) {
-                            setFormData((current) => ({
-                              ...current,
-                              email: selectedUser.email,
-                              displayName: current.displayName || selectedUser.displayName || current.displayName,
-                            }));
-                          }
-                        }}
-                      >
-                        <option value="">{loadingAuthUsers ? "Loading users..." : "Choose an existing authenticated user"}</option>
-                        {authUsers.map((item) => (
-                          <option key={item.id} value={item.id}>
-                            {item.displayName || item.email} {item.role ? `(${item.role})` : ""}
-                          </option>
-                        ))}
-                      </select>
-                      <div className={styles.hint}>Selecting a user will use their Firestore auth profile and promote them to leadership on save if needed.</div>
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="email">Email</label>
-                      <input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(event) => {
-                          setSelectedAuthUserId("");
-                          setFormData({ ...formData, email: event.target.value });
-                        }}
-                        placeholder="Enter or override email address"
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="branchLocation">Branch Location</label>
-                      <select id="branchLocation" value={formData.branchLocation} onChange={(event) => setFormData({ ...formData, branchLocation: event.target.value })}>
-                        <option value="">Select branch</option>
-                        {branches.map((branch) => (
-                          <option key={branch} value={branch}>{branch}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="branchAddress">Branch Address</label>
-                      <input id="branchAddress" type="text" value={formData.branchAddress} onChange={(event) => setFormData({ ...formData, branchAddress: event.target.value })} placeholder="Enter branch address" />
-                    </div>
-                    <div className={styles.formGroupWide}>
-                      <label htmlFor="branchDescription">Branch Description</label>
-                      <textarea id="branchDescription" value={formData.branchDescription} onChange={(event) => setFormData({ ...formData, branchDescription: event.target.value })} placeholder="Describe the branch, worship style, values, and community." rows={5} />
-                    </div>
+                              const selectedUser = authUsers.find((item) => item.id === nextUserId);
+                              if (selectedUser) {
+                                setFormData((current) => ({
+                                  ...current,
+                                  email: selectedUser.email,
+                                  displayName: current.displayName || selectedUser.displayName || current.displayName,
+                                }));
+                              }
+                            }}
+                          >
+                            <option value="">{loadingAuthUsers ? "Loading users..." : "Choose an existing authenticated user"}</option>
+                            {authUsers.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item.displayName || item.email} {item.role ? `(${item.role})` : ""}
+                              </option>
+                            ))}
+                          </select>
+                          <div className={styles.hint}>Selecting a user will use their Firestore auth profile and promote them to leadership on save if needed.</div>
+                        </div>
+                        <div className={styles.formGroup}>
+                          <label htmlFor="email">Email</label>
+                          <input
+                            id="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={(event) => {
+                              setSelectedAuthUserId("");
+                              setFormData({ ...formData, email: event.target.value });
+                            }}
+                            placeholder="Enter or override email address"
+                          />
+                        </div>
+                        <div className={styles.formGroupWide}>
+                          <label htmlFor="password">Password</label>
+                          <input id="password" type="password" value={formData.password} onChange={(event) => setFormData({ ...formData, password: event.target.value })} placeholder={creatingMember ? "Required for new leadership" : "Leave blank to keep current password"} />
+                        </div>
+                      </>
+                    )}
+                    {step === 1 && (
+                      <>
+                        <div className={styles.formGroup}>
+                          <label htmlFor="branchLocation">Branch Location</label>
+                          <select id="branchLocation" value={formData.branchLocation} onChange={(event) => setFormData({ ...formData, branchLocation: event.target.value })}>
+                            <option value="">Select branch</option>
+                            {branches.map((branch) => (
+                              <option key={branch} value={branch}>{branch}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className={styles.formGroup}>
+                          <label htmlFor="branchAddress">Branch Address</label>
+                          <input id="branchAddress" type="text" value={formData.branchAddress} onChange={(event) => setFormData({ ...formData, branchAddress: event.target.value })} placeholder="Enter branch address" />
+                        </div>
+                        <div className={styles.formGroup}>
+                          <label htmlFor="phoneNumber">Phone Number</label>
+                          <input id="phoneNumber" type="tel" value={formData.phoneNumber} onChange={(event) => setFormData({ ...formData, phoneNumber: event.target.value })} placeholder="Enter phone number" />
+                        </div>
+                      </>
+                    )}
+                    {step === 2 && (
+                      <>
+                        <div className={styles.formGroupWide}>
+                          <label htmlFor="branchDescription">Branch Description</label>
+                          <textarea id="branchDescription" value={formData.branchDescription} onChange={(event) => setFormData({ ...formData, branchDescription: event.target.value })} placeholder="Describe the branch, worship style, values, and community." rows={5} />
+                        </div>
                     <section className={styles.mediaSection}>
                       <div className={styles.mediaSectionHeader}>
                         <h3>Media</h3>
@@ -888,42 +917,66 @@ export default function DashboardTeamPage() {
                           />
                         </div>
                       </div>
-                    </section>
-                    <div className={styles.formGroupWide}>
-                      <label htmlFor="pastorDescription">Pastor Description</label>
-                      <textarea id="pastorDescription" value={formData.pastorDescription} onChange={(event) => setFormData({ ...formData, pastorDescription: event.target.value })} placeholder="Short bio or description of the pastor." rows={3} />
-                    </div>
-                    <div className={styles.formGroupWide}>
-                      <label htmlFor="branchHistory">Branch History</label>
-                      <textarea id="branchHistory" value={formData.branchHistory} onChange={(event) => setFormData({ ...formData, branchHistory: event.target.value })} placeholder="Write the history of this church branch." rows={5} />
-                    </div>
+                    </section></>)}
+                    {(step as number) === 3 && (
+                      <section className={styles.storySection}>
+                        <div className={styles.storySectionHeader}>
+                          <h3>History, Story & Vision</h3>
+                          <p>Keep the church story and pastor biography together so they are easier to scan and update.</p>
+                        </div>
 
-                    <div className={styles.formGroupWide}>
-                      <label htmlFor="pastorBiography">Pastor Biography</label>
-                      <textarea id="pastorBiography" value={formData.pastorBiography} onChange={(event) => setFormData({ ...formData, pastorBiography: event.target.value })} placeholder="Detailed biography of the pastor (education, ministry background, etc)." rows={5} />
-                    </div>
+                        <div className={styles.storyGrid}>
+                          <article className={styles.storyCard}>
+                            <div className={styles.storyCardHeader}>
+                              <h4>Church story</h4>
+                              <span>Past + growth</span>
+                            </div>
+                            <div className={styles.formGroupWide}>
+                              <label htmlFor="branchHistory">Branch History</label>
+                              <textarea id="branchHistory" value={formData.branchHistory} onChange={(event) => setFormData({ ...formData, branchHistory: event.target.value })} placeholder="Write the history of this church branch." rows={5} />
+                            </div>
+                            <div className={styles.formGroupWide}>
+                              <label htmlFor="churchStory">Church Story</label>
+                              <textarea id="churchStory" value={formData.churchStory} onChange={(event) => setFormData({ ...formData, churchStory: event.target.value })} placeholder="The story of the church and its mission." rows={5} />
+                            </div>
+                          </article>
 
-                    <div className={styles.formGroupWide}>
-                      <label htmlFor="churchStory">Church Story</label>
-                      <textarea id="churchStory" value={formData.churchStory} onChange={(event) => setFormData({ ...formData, churchStory: event.target.value })} placeholder="The story of the church and its mission." rows={5} />
-                    </div>
+                          <article className={styles.storyCard}>
+                            <div className={styles.storyCardHeader}>
+                              <h4>Pastor story</h4>
+                              <span>Short bio + biography</span>
+                            </div>
+                            <div className={styles.formGroupWide}>
+                              <label htmlFor="pastorDescription">Pastor Description</label>
+                              <textarea id="pastorDescription" value={formData.pastorDescription} onChange={(event) => setFormData({ ...formData, pastorDescription: event.target.value })} placeholder="Short bio or description of the pastor." rows={3} />
+                            </div>
+                            <div className={styles.formGroupWide}>
+                              <label htmlFor="pastorBiography">Pastor Biography</label>
+                              <textarea id="pastorBiography" value={formData.pastorBiography} onChange={(event) => setFormData({ ...formData, pastorBiography: event.target.value })} placeholder="Detailed biography of the pastor (education, ministry background, etc)." rows={5} />
+                            </div>
+                          </article>
 
-                    <div className={styles.formGroupWide}>
-                      <label htmlFor="vision">Vision</label>
-                      <textarea id="vision" value={formData.vision} onChange={(event) => setFormData({ ...formData, vision: event.target.value })} placeholder="Branch vision or long-term goals." rows={3} />
-                    </div>
+                          <article className={styles.storyCard}>
+                                <div className={styles.storyCardHeader}>
+                                  <h4>Future direction</h4>
+                                  <span>What comes next</span>
+                                </div>
+                                <div className={styles.formGroupWide}>
+                                  <label htmlFor="futureDirection">Future Direction</label>
+                                  <textarea id="futureDirection" value={formData.futureDirection} onChange={(event) => setFormData({ ...formData, futureDirection: event.target.value })} placeholder="Where the branch is heading (projects, expansion, community goals)." rows={3} />
+                                </div>
+                                <div className={styles.formGroupWide}>
+                                  <label htmlFor="visionGoals">Goals and dreams</label>
+                                  <textarea id="visionGoals" value={formData.visionGoals} onChange={(event) => setFormData({ ...formData, visionGoals: event.target.value })} placeholder="e.g. Build a school, Open an orphanage" rows={3} />
+                                </div>
+                          </article>
+                        </div>
+                      </section>
+                    )}
 
-                    <div className={styles.formGroupWide}>
-                      <label htmlFor="futureDirection">Future Direction</label>
-                      <textarea id="futureDirection" value={formData.futureDirection} onChange={(event) => setFormData({ ...formData, futureDirection: event.target.value })} placeholder="Where the branch is heading (projects, expansion, community goals)." rows={3} />
-                    </div>
-
-                    <div className={styles.formGroupWide}>
-                      <label htmlFor="visionGoals">Vision Goals (one per line or comma separated)</label>
-                      <textarea id="visionGoals" value={formData.visionGoals} onChange={(event) => setFormData({ ...formData, visionGoals: event.target.value })} placeholder="e.g. Build a school, Open an orphanage" rows={3} />
-                    </div>
-
-                    <section className={styles.featureSection}>
+                    {(step as number) === 4 && (
+                      <>
+                        <section className={styles.featureSection}>
                       <div className={styles.mediaSectionHeader}>
                         <h3>Directors</h3>
                         <p>Add directors for various dockets (children, outreach, etc.). Include image URL, name, role and a brief description.</p>
@@ -956,9 +1009,9 @@ export default function DashboardTeamPage() {
                       <div>
                         <button type="button" className={styles.addButton} onClick={addDirector}>+ Add Director</button>
                       </div>
-                    </section>
+                      </section>
 
-                    <section className={styles.featureSection}>
+                      <section className={styles.featureSection}>
                       <div className={styles.mediaSectionHeader}>
                         <h3>Projects</h3>
                         <p>Add projects for this branch with image, name, short role/title and description.</p>
@@ -991,7 +1044,10 @@ export default function DashboardTeamPage() {
                       <div>
                         <button type="button" className={styles.addButton} onClick={addProject}>+ Add Project</button>
                       </div>
-                    </section>
+                        </section>
+                      </>
+                    )}
+
                     <div className={styles.formGroupWide}>
                       <div className={styles.hint}>The media section above keeps the primary image separate from the gallery images so it is easier to review and update.</div>
                     </div>
@@ -1064,17 +1120,51 @@ export default function DashboardTeamPage() {
                         </div>
                       </div>
                     </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="phoneNumber">Phone Number</label>
-                      <input id="phoneNumber" type="tel" value={formData.phoneNumber} onChange={(event) => setFormData({ ...formData, phoneNumber: event.target.value })} placeholder="Enter phone number" />
-                    </div>
-                    <div className={styles.formGroupWide}>
-                      <label htmlFor="password">Password</label>
-                      <input id="password" type="password" value={formData.password} onChange={(event) => setFormData({ ...formData, password: event.target.value })} placeholder={creatingMember ? "Required for new leadership" : "Leave blank to keep current password"} />
-                    </div>
+                    
+
                     <div className={styles.formActions}>
-                      <button type="button" className={styles.cancelBtn} onClick={closeEditor}>Cancel</button>
-                      <button type="submit" className={styles.saveBtn} disabled={saving}>{saving ? "Saving..." : creatingMember ? "Create Leadership" : "Update Leadership"}</button>
+                      <div className={styles.stepInfo}>
+                        Step {step + 1} of {stepLabels.length} — {stepLabels[step]}
+                      </div>
+                      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                        {step > 0 ? (
+                          <button
+                            type="button"
+                            className={styles.cancelBtn}
+                            onClick={() => setStep((s) => Math.max(0, s - 1))}
+                          >
+                            Previous
+                          </button>
+                        ) : null}
+
+                        {step < stepLabels.length - 1 ? (
+                          <button
+                            type="button"
+                            className={styles.saveBtn}
+                            onClick={() => {
+                              // Basic validation for first step
+                              if (step === 0) {
+                                if (!formData.displayName || !formData.email) {
+                                  alert("Please provide a name and email before continuing.");
+                                  return;
+                                }
+                                if (creatingMember && !formData.password) {
+                                  alert("Password is required for new leadership accounts.");
+                                  return;
+                                }
+                              }
+                              setStep((s) => Math.min(stepLabels.length - 1, s + 1));
+                            }}
+                          >
+                            Next
+                          </button>
+                        ) : (
+                          <>
+                            <button type="button" className={styles.cancelBtn} onClick={closeEditor}>Cancel</button>
+                            <button type="submit" className={styles.saveBtn} disabled={saving}>{saving ? "Saving..." : creatingMember ? "Create Leadership" : "Update Leadership"}</button>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </form>
                 </div>

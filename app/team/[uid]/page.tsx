@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Navbar from "@/app/components/Navbar/Navbar";
+import BranchStorySection from "@/app/member/page";
 import styles from "./page.module.css";
 
 type TeamBranchDetail = {
@@ -246,6 +247,7 @@ export default function TeamMemberBranchPage() {
   const pastorPrimaryImage = member.pastorImageURL || pastorGalleryImages[0] || "";
   const mapEmbedUrl = normalizeMapUrl(member.branchMapUrl) || buildMapEmbedUrl(member.branchAddress);
   const mapLinkUrl = normalizeMapUrl(member.branchMapUrl) || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(member.branchAddress || member.branchLocation)}`;
+  const isMainBranch = /mosocho/i.test(String(member.branchKey || member.branchLocation || ""));
   const sectionBlocks: SectionBlock[] = [
     {
       title: "Branch Description",
@@ -285,6 +287,7 @@ export default function TeamMemberBranchPage() {
     },
   ].filter((section) => Boolean(section.body) || Boolean(section.items?.length));
 
+  const timelineSections = sectionBlocks.filter((s) => s.title !== "Branch Description" && s.title !== "Pastor Description");
   return (
     <>
       <Navbar />
@@ -295,7 +298,7 @@ export default function TeamMemberBranchPage() {
             <div className={styles.titleRow}>
               <div className={styles.profileIcon}>
                 {pastorPrimaryImage ? (
-                  <Image unoptimized src={pastorPrimaryImage} alt={member.displayName} fill sizes="72px" style={{ objectFit: "cover" }} />
+                  <Image unoptimized src={pastorPrimaryImage} alt={member.displayName} fill sizes="72px" style={{ objectFit: "cover", objectPosition: "center top" }} />
                 ) : (
                   <span>{member.displayName?.[0]?.toUpperCase() || "B"}</span>
                 )}
@@ -341,46 +344,46 @@ export default function TeamMemberBranchPage() {
           </div>
           <div className={styles.heroImage}>
             {pastorPrimaryImage ? (
-              <Image unoptimized src={pastorPrimaryImage} alt={member.displayName} fill sizes="(max-width: 768px) 100vw, 42vw" style={{ objectFit: "cover" }} />
+              <Image unoptimized src={pastorPrimaryImage} alt={member.displayName} fill sizes="(max-width: 768px) 100vw, 42vw" style={{ objectFit: "cover", objectPosition: "center top" }} />
             ) : (
               <div className={styles.loading}>No profile image available.</div>
             )}
           </div>
         </section>
 
-        <section className={styles.timelineSection}>
-          <div className={styles.sectionHeader}>
-            <div>
-              <p className={styles.sectionKicker}>At a glance</p>
-              <h2>Everything in one logical flow</h2>
-            </div>
-            <p className={styles.sectionLead}>
-              Start with the branch identity, move through the story, then end with vision, teams, and active ministry.
-            </p>
-          </div>
+        <BranchStorySection
+          branchHistory={member.branchHistory || member.churchStory || member.branchDescription}
+          pastorBiography={member.pastorBiography || member.pastorDescription}
+          pastorName={member.displayName}
+          churchTitle="Church History"
+          pastorTitle="Pastor Biography"
+        />
 
-          <div className={styles.timelineGrid}>
-            {sectionBlocks.map((section, index) => (
-              <article key={section.title} className={styles.timelineCard}>
-                <div className={styles.timelineMeta}>
-                  <span className={styles.timelineStep}>{String(index + 1).padStart(2, "0")}</span>
-                  <div>
-                    <p className={styles.timelineLabel}>{section.label}</p>
-                    <h3>{section.title}</h3>
+        {isMainBranch ? (
+          <section className={styles.timelineSection}>
+            <div className={styles.timelineGrid}>
+              {timelineSections.map((section, index) => (
+                <article key={section.title} className={styles.timelineCard}>
+                  <div className={styles.timelineMeta}>
+                    <span className={styles.timelineStep}>{String(index + 1).padStart(2, "0")}</span>
+                    <div>
+                      <p className={styles.timelineLabel}>{section.label}</p>
+                      <h3>{section.title}</h3>
+                    </div>
                   </div>
-                </div>
-                {section.body ? <p className={styles.timelineBody}>{section.body}</p> : null}
-                {section.items && section.items.length ? (
-                  <ul className={styles.timelineList}>
-                    {section.items.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                ) : null}
-              </article>
-            ))}
-          </div>
-        </section>
+                  {section.body ? <p className={styles.timelineBody}>{section.body}</p> : null}
+                  {section.items && section.items.length ? (
+                    <ul className={styles.timelineList}>
+                      {section.items.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         <section className={styles.contentGrid}>
           <article className={styles.profileCard}>
@@ -394,7 +397,7 @@ export default function TeamMemberBranchPage() {
               </div>
               {pastorPrimaryImage || pastorGalleryImages.length ? (
                 <div className={styles.profileImage}>
-                  <Image unoptimized src={pastorPrimaryImage || pastorGalleryImages[0] || ""} alt={member.displayName} fill sizes="180px" style={{ objectFit: "cover" }} />
+                  <Image unoptimized src={pastorPrimaryImage || pastorGalleryImages[0] || ""} alt={member.displayName} fill sizes="180px" style={{ objectFit: "cover", objectPosition: "center top" }} />
                   <button className={styles.viewImagesBtn} onClick={() => setShowPastorModal(true)}>View pastor images</button>
                 </div>
               ) : null}
@@ -472,7 +475,8 @@ export default function TeamMemberBranchPage() {
             </article>
           </div>
 
-          <article className={styles.featureSection}>
+          {isMainBranch ? (
+            <article className={styles.featureSection}>
             <div className={styles.sectionHeader}>
               <div>
                 <p className={styles.sectionKicker}>Leadership</p>
@@ -506,7 +510,29 @@ export default function TeamMemberBranchPage() {
             ) : (
               <p className={styles.emptyState}>No directors added yet.</p>
             )}
-          </article>
+            </article>
+          ) : (
+            <section className={styles.compactSection}>
+              { (member.vision || member.futureDirection || (member.visionGoals && member.visionGoals.length)) ? (
+                <article className={styles.infoCard}>
+                  <h3>Vision & Future</h3>
+                  {member.vision ? <p>{member.vision}</p> : null}
+                  {member.futureDirection && !member.vision ? <p>{member.futureDirection}</p> : null}
+                  {member.visionGoals && member.visionGoals.length ? (
+                    <ul>
+                      {member.visionGoals.map((g, i) => (
+                        <li key={i}>{g}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </article>
+              ) : null }
+
+              <article className={styles.infoCard}>
+                <p className={styles.profileMuted}>For more branch-specific details, see the main church profile on the homepage.</p>
+              </article>
+            </section>
+          )}
 
           <article className={styles.featureSection}>
             <div className={styles.sectionHeader}>
