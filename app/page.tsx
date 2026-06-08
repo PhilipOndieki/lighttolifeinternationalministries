@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Navbar from "./components/Navbar/Navbar";
+import HeroSection from "./components/hero/hero";
 import TeamSection from "./components/TeamSection/TeamSection";
 import styles from "./page.module.css";
 import ImageUpload from "./components/ImageUpload/ImageUpload";
@@ -225,71 +226,9 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
-      <Navbar />
+      <HeroSection />
 
       <main className={styles.main} id="home">
-        <section className={styles.hero}>
-          <div className={styles.heroCopy}>
-            <div className={styles.verse}>
-              <span className={`${styles.badge} ${styles.verseBadge}`}>
-                Welcome to
-              </span>
-              <h1>Light to Life International Ministries</h1>
-            </div>
-            
-            <p>
-              Light to Life International Ministries is a Christ-centered ministry committed to transforming lives through the Gospel, discipleship, outreach, and compassionate service. We exist to share the love of Jesus, strengthen believers, and bring hope to communities in need.
-            </p>
-
-            <div className={styles.heroActions}>
-              <a className={styles.primaryButton} href="/donate">
-                Support us
-              </a>
-              <a className={styles.secondaryButton} href="#about">
-                Join us
-              </a>
-            </div>
-
-            <div className={styles.heroStats}>
-              <div>
-                <strong>200+</strong>
-                <span>Students sponsored</span>
-              </div>
-              <div>
-                <strong>10+</strong>
-                <span>Countries Reached</span>
-              </div>
-              <div>
-                <strong>100%</strong>
-                <span>Volunteer Driven</span>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.heroVisual} aria-hidden="true">
-            <div className={styles.heroStack}>
-              <div className={styles.heroCard}>
-                <Image
-                  src="/hero.jpeg"
-                  alt="Congregation"
-                  fill
-                  className={styles.heroImage}
-                  priority
-                />
-              </div>
-
-              {/* <div className={styles.heroAccentCard}>
-                <Image
-                  src="/dove.jpeg"
-                  alt="Dove symbol"
-                  fill
-                  className={styles.heroImage}
-                />
-              </div> */}
-            </div>
-          </div>
-        </section>
-
         {featuredFounders.length ? (() => {
           const activeFounder = featuredFounders[Math.min(activeFounderIndex, featuredFounders.length - 1)] || featuredFounders[0];
           const founderTitleLabel = activeFounder.pastorTitle || "Branch Title";

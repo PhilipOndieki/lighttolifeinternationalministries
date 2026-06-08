@@ -347,33 +347,44 @@ export async function GET(_request: NextRequest, context: { params: Promise<{ ui
         .replace(/\s+/g, " ")
         .trim();
 
+    const normalizeBranchSlug = (value: string) =>
+      normalizeBranch(value).replace(/\s+/g, "-");
+
+    const normalizedBranchTokens = (value: string) =>
+      normalizeBranch(value)
+        .split(" ")
+        .filter(Boolean)
+        .filter((token) => !["main", "headquarters", "leadership", "pastor", "service", "ministry"].includes(token));
+
     const branchName = normalizeBranch(mergedMember.branchLocation || mergedMember.branchKey || "");
+    const branchValue = String(mergedMember.branchLocation || mergedMember.branchKey || "").trim();
+    const branchValueLower = branchValue.toLowerCase();
     const blogsSnap = await adminDb().collection("blogs").get();
-    const relatedBlogs = blogsSnap.docs
+    const filteredRelatedBlogs = blogsSnap.docs
       .map((document) => {
         const data = document.data() as { title?: string; content?: string; imageUrl?: string; date?: string; branch?: string };
+        const branch = String(data.branch || "").trim();
         return {
           id: document.id,
           title: String(data.title || "").trim(),
           excerpt: String(data.content || "").trim().slice(0, 180),
           imageUrl: String(data.imageUrl || "").trim(),
           date: String(data.date || "").trim(),
-          branch: String(data.branch || "").trim(),
-          normalizedBranch: normalizeBranch(String(data.branch || "")),
+          branch,
         };
       })
       .filter((blog) => {
-        if (!blog.normalizedBranch || !branchName) return false;
+        const blogBranch = String(blog.branch || "").trim();
         return (
-          blog.normalizedBranch === branchName ||
-          branchName.includes(blog.normalizedBranch) ||
-          blog.normalizedBranch.includes(branchName)
+          branchValue &&
+          blogBranch &&
+          blogBranch.toLowerCase() === branchValueLower
         );
       });
 
     return NextResponse.json({
       member: mergedMember,
-      relatedBlogs,
+      relatedBlogs: filteredRelatedBlogs,
     });
   } catch (error) {
     console.error("Public leadership lookup failed:", error);

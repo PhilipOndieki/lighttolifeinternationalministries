@@ -36,6 +36,7 @@ export default function DashboardBlogsPage() {
     date: new Date().toISOString().split("T")[0],
     category: "General",
     imageUrl: "",
+    additionalImageUrls: [],
     featured: false,
   });
 
@@ -123,6 +124,7 @@ export default function DashboardBlogsPage() {
       ...blog,
       branch: blog.branch || "",
       imageUrl: blog.imageUrl || "",
+      additionalImageUrls: blog.additionalImageUrls || [],
       featured: Boolean(blog.featured),
     });
     setEditingId(blog.id);
@@ -136,6 +138,15 @@ export default function DashboardBlogsPage() {
     });
   }, []);
 
+  const handleSelectAdditionalImages = useCallback((images: Array<{ url: string }>) => {
+    setFormData((current) => {
+      const nextImageUrls = images.map((img) => img.url);
+      const currentUrls = (current.additionalImageUrls || []).slice().sort().join("|");
+      const nextUrls = nextImageUrls.slice().sort().join("|");
+      return currentUrls === nextUrls ? current : { ...current, additionalImageUrls: nextImageUrls };
+    });
+  }, []);
+
   const resetForm = () => {
     setFormData({
       title: "",
@@ -145,6 +156,7 @@ export default function DashboardBlogsPage() {
       date: new Date().toISOString().split("T")[0],
       category: "General",
       imageUrl: "",
+      additionalImageUrls: [],
       featured: false,
     });
     setEditingId(null);
@@ -265,6 +277,37 @@ export default function DashboardBlogsPage() {
                     <span className={styles.previewLabel}>Current image preview</span>
                     <div className={styles.previewImage}>
                       <Image src={formData.imageUrl} alt={formData.title || "Selected blog image"} fill sizes="100vw" />
+                    </div>
+                  </div>
+                ) : null}
+
+                <div className={styles.formGroup}>
+                  <label>Additional Images (for blog body)</label>
+                  <div className={styles.hint}>
+                    Upload multiple images to be displayed within the blog post. These images will appear in a gallery below the main content.
+                  </div>
+                  <ImageUpload
+                    onSelectMultiple={handleSelectAdditionalImages}
+                    initialSelectedUrls={formData.additionalImageUrls || []}
+                    multiSelect
+                    title="Upload additional blog images"
+                    description="Upload additional images that will be displayed within the blog post content."
+                    selectedLabel="Additional images selected"
+                    selectedSummary="These images will be displayed in the blog body."
+                    libraryTitle="Uploaded images for blog"
+                    libraryDescription="Select multiple images to include in your blog post."
+                  />
+                </div>
+
+                {(formData.additionalImageUrls || []).length > 0 ? (
+                  <div className={styles.previewWrap}>
+                    <span className={styles.previewLabel}>Additional images preview ({formData.additionalImageUrls?.length || 0})</span>
+                    <div className={styles.additionalImagesPreview}>
+                      {formData.additionalImageUrls?.map((url, index) => (
+                        <div key={`${url}-${index}`} className={styles.additionalImagePreview}>
+                          <Image src={url} alt={`Additional image ${index + 1}`} fill sizes="100vw" />
+                        </div>
+                      ))}
                     </div>
                   </div>
                 ) : null}

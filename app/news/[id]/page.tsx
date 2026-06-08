@@ -3,26 +3,28 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { use } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import { getBlogById, BlogPost } from "../../lib/firebase/firestore";
 import styles from "../news.module.css";
 
-export default function NewsDetailPage({ params }: { params: { id: string } }) {
+export default function NewsDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const [blog, setBlog] = useState<(BlogPost & { id: string }) | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadBlog = async () => {
       setLoading(true);
-      const fetchedBlog = await getBlogById(params.id);
+      const fetchedBlog = await getBlogById(id);
       setBlog(fetchedBlog);
       setLoading(false);
     };
 
-    if (params.id) {
+    if (id) {
       void loadBlog();
     }
-  }, [params.id]);
+  }, [id]);
 
   if (loading) {
     return (
@@ -88,6 +90,25 @@ export default function NewsDetailPage({ params }: { params: { id: string } }) {
             <div className={styles.detailContent}>
               <p>{blog.content}</p>
             </div>
+
+            {(blog.additionalImageUrls && blog.additionalImageUrls.length > 0) && (
+              <div className={styles.additionalImagesGallery}>
+                <h2 className={styles.galleryTitle}>Blog Images</h2>
+                <div className={styles.galleryGrid}>
+                  {blog.additionalImageUrls.map((imageUrl, index) => (
+                    <div key={`${imageUrl}-${index}`} className={styles.galleryItem}>
+                      <Image
+                        src={imageUrl}
+                        alt={`${blog.title} image ${index + 1}`}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        style={{ objectFit: "cover" }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </section>
       </main>

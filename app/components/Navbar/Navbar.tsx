@@ -40,14 +40,14 @@ export default function Navbar() {
          ]
        },
         {
-        label: "Leadership",
-        href: "/#about",
-        subItems: [
-          { label: "Main Branch", href: "/team/mosocho" },
-          { label: "Nyanchwa Branch", href: "/team/nyanchwa" },
-          { label: "Omogwa Branch", href: "/team/omogwa" },
-        ],
-      },
+          label: "Branches",
+          href: "/#about",
+          subItems: [
+            { label: "Main Branch", href: "/team/mosocho" },
+            { label: "Nyanchwa Branch", href: "/team/nyanchwa" },
+            { label: "Omogwa Branch", href: "/team/omogwa" },
+          ],
+        },
       {
         label: "Events",
         href: "/events",
