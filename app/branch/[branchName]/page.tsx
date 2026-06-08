@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useParams } from "next/navigation";
+import Navbar from "@/app/components/Navbar/Navbar";
+import LocationCarousel from "@/app/components/LocationCarousel/LocationCarousel";
 
 type BranchFeatureItem = {
   id?: string;
@@ -46,6 +49,9 @@ const tabs = [
 ];
 
 export default function BranchProfile() {
+  const params = useParams<{ branchName?: string }>();
+  const branchName = Array.isArray(params?.branchName) ? params.branchName[0] : params?.branchName || "east-africa-main-church-headquarters";
+  
   const [activeTab, setActiveTab] = useState("Overview");
   const [branchData, setBranchData] = useState<TeamBranchDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -53,8 +59,8 @@ export default function BranchProfile() {
   useEffect(() => {
     const loadBranchData = async () => {
       try {
-        // Fetch Mosocho branch data (main branch)
-        const response = await fetch(`/api/public/team/east-africa-main-church-headquarters`);
+        // Fetch branch data based on the branchName parameter
+        const response = await fetch(`/api/public/team/${encodeURIComponent(branchName)}`);
         const payload = (await response.json()) as { member?: TeamBranchDetail; error?: string };
         
         if (response.ok && payload.member) {
@@ -72,7 +78,7 @@ export default function BranchProfile() {
     };
 
     void loadBranchData();
-  }, []);
+  }, [branchName]);
 
   const renderTabContent = () => {
     if (!branchData) return null;
@@ -231,6 +237,11 @@ export default function BranchProfile() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-100 via-slate-50 to-slate-100">
+      {/* Navbar */}
+      <Navbar />
+
+      {/* Location Carousel */}
+      <LocationCarousel />
 
       {/* HERO */}
       <div className="relative h-72 sm:h-80 lg:h-96 w-full">
@@ -405,6 +416,47 @@ export default function BranchProfile() {
                   <p className="text-slate-700">{branchData.email || "Not provided"}</p>
                 </div>
 
+              </div>
+            </div>
+
+            {/* Location Section */}
+            <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl shadow-sm border border-slate-700 p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-2xl">📍</span>
+                <h3 className="font-semibold text-white">
+                  Branch Location
+                </h3>
+              </div>
+
+              <div className="space-y-3 text-sm">
+                <div className="p-3 bg-white/10 rounded-lg backdrop-blur-sm border border-white/20">
+                  <p className="text-slate-300 text-xs mb-1">Region</p>
+                  <p style={{ color: "var(--gold)" }} className="font-semibold">
+                    {branchData.branchLocation}
+                  </p>
+                </div>
+
+                <div className="p-3 bg-white/10 rounded-lg backdrop-blur-sm border border-white/20">
+                  <p className="text-slate-300 text-xs mb-1">Full Address</p>
+                  <p className="text-white text-sm">
+                    {branchData.branchAddress || "Address not available"}
+                  </p>
+                </div>
+
+                {branchData.branchMapUrl && (
+                  <a
+                    href={branchData.branchMapUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full p-3 rounded-lg transition text-center text-sm font-medium"
+                    style={{
+                      backgroundColor: "var(--gold)",
+                      color: "var(--nav-cta-text)",
+                    }}
+                  >
+                    View on Map →
+                  </a>
+                )}
               </div>
             </div>
 

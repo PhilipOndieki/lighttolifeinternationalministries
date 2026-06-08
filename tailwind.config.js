@@ -6,7 +6,16 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        cormorant: "var(--font-cormorant)",
+        inter: "var(--font-inter)",
+      },
+      colors: {
+        gold: "var(--gold)",
+        "gold-dark": "var(--gold-dark)",
+      },
+    },
   },
   plugins: [],
 }

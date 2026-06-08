@@ -5,6 +5,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --gold: #D4AF37;
+  --gold-dark: #B8860B;
   /* Navbar light theme */
   --surface: #ffffff;
   --surface-border: rgba(203, 213, 225, 0.5);
@@ -12,8 +14,8 @@
   --text-nav: #334155;
   --button-secondary-bg: rgba(226, 232, 240, 0.6);
   --button-secondary-border: rgba(148, 163, 184, 0.34);
-  --nav-cta-bg: linear-gradient(135deg, #2563eb, #1d4ed8);
-  --nav-cta-text: #ffffff;
+  --nav-cta-bg: linear-gradient(135deg, #D4AF37, #B8860B);
+  --nav-cta-text: #0f172a;
   /* Footer */
   --footer-bg: rgba(8, 28, 51, 0.9);
 }
@@ -21,6 +23,8 @@
 html[data-theme="light"] {
   --background: #ffffff;
   --foreground: #171717;
+  --gold: #D4AF37;
+  --gold-dark: #B8860B;
   /* Navbar light theme */
   --surface: #ffffff;
   --surface-border: rgba(203, 213, 225, 0.5);
@@ -28,13 +32,15 @@ html[data-theme="light"] {
   --text-nav: #334155;
   --button-secondary-bg: rgba(226, 232, 240, 0.6);
   --button-secondary-border: rgba(148, 163, 184, 0.34);
-  --nav-cta-bg: linear-gradient(135deg, #2563eb, #1d4ed8);
-  --nav-cta-text: #ffffff;
+  --nav-cta-bg: linear-gradient(135deg, #D4AF37, #B8860B);
+  --nav-cta-text: #0f172a;
 }
 
 html[data-theme="dark"] {
   --background: #0b2540;
   --foreground: #f8fbff;
+  --gold: #D4AF37;
+  --gold-dark: #B8860B;
   /* Navbar dark theme */
   --surface: rgba(8, 28, 51, 0.98);
   --surface-border: rgba(56, 189, 248, 0.25);
@@ -42,8 +48,8 @@ html[data-theme="dark"] {
   --text-nav: #bcdcff;
   --button-secondary-bg: rgba(30, 58, 98, 0.7);
   --button-secondary-border: rgba(147, 197, 253, 0.38);
-  --nav-cta-bg: linear-gradient(135deg, #38bdf8, #2563eb);
-  --nav-cta-text: #f8fbff;
+  --nav-cta-bg: linear-gradient(135deg, #D4AF37, #B8860B);
+  --nav-cta-text: #0b2540;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -70,7 +76,7 @@ body {
   flex-direction: column;
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter, Arial, Helvetica, sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

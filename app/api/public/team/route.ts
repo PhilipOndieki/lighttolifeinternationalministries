@@ -160,8 +160,8 @@ const getPriorityRank = (member: TeamMemberDocumentData) => {
   const branchKey = toBranchKey(String(member.branchKey || ""));
   const branchLocation = toBranchKey(String(member.branchLocation || ""));
   const displayName = String(member.displayName || "").toLowerCase();
-  const isMosocho = branchKey.includes("mosocho") || branchLocation.includes("mosocho") || displayName.includes("bishop francis akaki");
-  const isOmogwa = branchKey.includes("omogwa") || branchLocation.includes("omogwa");
+  const isMosocho = branchKey.includes("mosocho") || branchLocation.includes("eastafrica") || displayName.includes("bishop francis akaki");
+  const isOmogwa = branchKey.includes("omogwa") || branchLocation.includes("nakuru");
 
   if (isMosocho) return 0;
   if (isOmogwa) return 1;

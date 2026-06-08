@@ -19,7 +19,7 @@ export default function ProfilePage() {
   const [photoURL, setPhotoURL] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const branches = ["Mosocho (Main church headquarters)", "Nyanchwa", "Omogwa"];
+  const branches = ["East Africa - Main Church Headquarters", "Kisumu", "Nakuru"];
 
   useEffect(() => {
     if (!user) {

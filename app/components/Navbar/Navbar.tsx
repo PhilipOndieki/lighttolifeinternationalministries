@@ -30,38 +30,40 @@ export default function Navbar() {
 
   const navItems = useMemo<NavItem[]>(
     () => [
-       {
-         label: "About",
-         href: "/#about",
-         subItems: [
-           { label: "Mission", href: "/#features" },
+      {
+        label: "Home",
+        href: "/",
+        subItems: [],
+      },
+      {
+        label: "About Us",
+        href: "/#about",
+        subItems: [
+          { label: "Mission", href: "/#features" },
           { label: "About", href: "/#about" },
           { label: "Team", href: "/#leadership" },
-         ]
-       },
-        {
-          label: "Branches",
-          href: "/#about",
-          subItems: [
-            { label: "Main Branch", href: "/team/mosocho" },
-            { label: "Nyanchwa Branch", href: "/team/nyanchwa" },
-            { label: "Omogwa Branch", href: "/team/omogwa" },
-          ],
-        },
+        ],
+      },
+      {
+        label: "Our Branches",
+        href: "/branch/east-africa-main-church-headquarters",
+        subItems: [
+          { label: "East Africa - Main Church Headquarters", href: "/branch/east-africa-main-church-headquarters" },
+          { label: "Kisumu", href: "/branch/kisumu" },
+          { label: "Nakuru", href: "/branch/nakuru" },
+        ],
+      },
+      {
+        label: "Missions",
+        href: "/#features",
+        subItems: [],
+      },
       {
         label: "Events",
         href: "/events",
         subItems: [
           { label: "Calendar", href: "/events#calendar" },
           { label: "Upcoming", href: "/events#upcoming" },
-        ],
-      },
-      {
-        label: "Projects",
-        href: "/projects",
-        subItems: [
-          { label: "Ongoing", href: "/projects#ongoing" },
-          { label: "Partners", href: "/projects#partners" },
         ],
       },
       {
@@ -206,70 +208,114 @@ export default function Navbar() {
         <span className={styles.hamburgerLine}></span>
       </button>
 
-      <nav className={`${styles.navLinks} ${isOpen ? styles.navLinksOpen : ""}`} aria-label="Primary navigation">
-        {navItems.map((item) => (
-          <div key={item.label} className={styles.navItem}>
-            <Link className={styles.navLink} href={item.href} onClick={(event) => handleTopLevelClick(item, event)}>
+      {/* Desktop Navigation */}
+      <nav className="hidden gap-10 text-sm font-medium text-white lg:flex" aria-label="Primary navigation">
+        {navItems.map((item, index) => (
+          <div key={item.label} className="group relative">
+            <Link 
+              href={item.href} 
+              onClick={(event) => handleTopLevelClick(item, event)}
+              className={`hover:text-amber-400 transition flex items-center gap-1 ${index === 0 ? 'text-amber-400' : ''}`}
+            >
               {item.label}
+              {item.subItems.length > 0 && <span className="text-xs">▼</span>}
             </Link>
-            <ul className={`${styles.navSub} ${activeSubmenu === item.label ? styles.navSubOpen : ""}`} aria-label={`${item.label} sub-menu`}>
-              {item.subItems.map((subItem) => (
-                <li key={subItem.href}>
-                  <Link href={subItem.href} onClick={() => {
-                    setIsOpen(false);
-                    setActiveSubmenu(null);
-                  }}>
-                    {subItem.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {item.subItems.length > 0 && (
+              <div className="absolute left-0 top-full hidden pt-2 group-hover:block">
+                <div className="flex flex-col gap-2 rounded-lg bg-black/90 p-4 min-w-max shadow-lg border border-amber-400/30">
+                  {item.subItems.map((subItem) => (
+                    <Link
+                      key={subItem.href}
+                      href={subItem.href}
+                      onClick={() => {
+                        setIsOpen(false);
+                        setActiveSubmenu(null);
+                      }}
+                      className="hover:text-amber-400 transition text-sm py-1"
+                    >
+                      {subItem.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         ))}
-
-        <div className={styles.navMobileActions}>
-          {!authLoading && !user ? (
-            <>
-              <Link className={styles.authLink} href="/login" onClick={() => setIsOpen(false)}>Login</Link>
-              <Link className={styles.authLink} href="/register" onClick={() => setIsOpen(false)}>Register</Link>
-            </>
-          ) : !authLoading && user ? (
-            <>
-              <Link className={styles.authLink} href="/dashboard" onClick={() => setIsOpen(false)}>
-                Dashboard
-              </Link>
-              <Link className={styles.authLink} href="/dashboard/profile" onClick={() => setIsOpen(false)}>
-                Profile
-              </Link>
-              <button
-                className={styles.authLink}
-                onClick={async () => {
-                  try {
-                    await import("@/app/lib/firebase/config");
-                    const firebaseAuth = await import("firebase/auth");
-                    const auth = firebaseAuth.getAuth();
-                    await firebaseAuth.signOut(auth);
-                  } catch (e) {
-                    console.error("Navbar logout error:", e);
-                  }
-                  setIsOpen(false);
-                  router.push("/");
-                }}
-              >
-                Logout
-              </button>
-            </>
-          ) : null}
-          <Link className={styles.navButton} href="/donate" onClick={() => setIsOpen(false)}>Support Us</Link>
-        </div>
       </nav>
+
+      {/* Mobile Navigation */}
+      {isOpen && (
+        <nav className="lg:hidden absolute top-20 left-0 right-0 bg-black/95 border-b border-amber-400/30 p-4" aria-label="Mobile navigation">
+          <div className="flex flex-col gap-4 text-sm font-medium text-white">
+            {navItems.map((item, index) => (
+              <div key={item.label}>
+                <Link 
+                  href={item.href} 
+                  onClick={(event) => handleTopLevelClick(item, event)}
+                  className={`hover:text-amber-400 transition flex items-center gap-1 ${index === 0 ? 'text-amber-400' : ''}`}
+                >
+                  {item.label}
+                  {item.subItems.length > 0 && <span className="text-xs">▼</span>}
+                </Link>
+                {item.subItems.length > 0 && activeSubmenu === item.label && (
+                  <div className="flex flex-col gap-2 mt-2 ml-4 pl-4 border-l border-amber-400/30">
+                    {item.subItems.map((subItem) => (
+                      <Link
+                        key={subItem.href}
+                        href={subItem.href}
+                        onClick={() => {
+                          setIsOpen(false);
+                          setActiveSubmenu(null);
+                        }}
+                        className="hover:text-amber-400 transition text-xs py-1"
+                      >
+                        {subItem.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+            {!authLoading && !user ? (
+              <>
+                <Link className="hover:text-amber-400 transition" href="/login" onClick={() => setIsOpen(false)}>Login</Link>
+                <Link className="hover:text-amber-400 transition" href="/register" onClick={() => setIsOpen(false)}>Register</Link>
+                <Link className="hover:text-amber-400 transition" href="/donate" onClick={() => setIsOpen(false)}>Donate</Link>
+              </>
+            ) : !authLoading && user ? (
+              <>
+                <Link className="hover:text-amber-400 transition" href="/dashboard" onClick={() => setIsOpen(false)}>Dashboard</Link>
+                <Link className="hover:text-amber-400 transition" href="/dashboard/profile" onClick={() => setIsOpen(false)}>Profile</Link>
+                <button
+                  className="hover:text-amber-400 transition text-left"
+                  onClick={async () => {
+                    try {
+                      await import("@/app/lib/firebase/config");
+                      const firebaseAuth = await import("firebase/auth");
+                      const auth = firebaseAuth.getAuth();
+                      await firebaseAuth.signOut(auth);
+                    } catch (e) {
+                      console.error("Navbar logout error:", e);
+                    }
+                    setIsOpen(false);
+                    router.push("/");
+                  }}
+                >
+                  Logout
+                </button>
+                <Link className="hover:text-amber-400 transition" href="/donate" onClick={() => setIsOpen(false)}>Donate</Link>
+              </>
+            ) : null}
+          </div>
+        </nav>
+      )}
 
       <div className={styles.navActions} ref={profileMenuRef}>
         {!authLoading && !user ? (
           <>
             <Link className={styles.authLink} href="/login">Login</Link>
             <Link className={styles.authLink} href="/register">Register</Link>
-            <Link className={styles.navButton} href="/donate">Support Us</Link>
+            <Link className={styles.navButton} href="/donate">Donate</Link>
           </>
         ) : !authLoading && user ? (
           <>

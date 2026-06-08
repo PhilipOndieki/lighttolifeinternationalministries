@@ -8,7 +8,7 @@
   margin: 12px auto;
   padding: 0 24px;
   height: 64px;
-  background: var(--surface);
+  background: transparent;
   border-radius: 12px;
   border: 1px solid var(--surface-border);
   backdrop-filter: blur(16px);

@@ -137,7 +137,7 @@ const parseGalleryUrls = (value?: string[] | string | null) => {
   return [];
 };
 
-const branches = ["Mosocho (Main church headquarters)", "Nyanchwa", "Omogwa"];
+const branches = ["East Africa - Main Church Headquarters", "Kisumu", "Nakuru"];
 
 export default function DashboardTeamPage() {
   const router = useRouter();

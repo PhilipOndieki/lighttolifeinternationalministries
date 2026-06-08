@@ -7,96 +7,71 @@ import {
   Play,
   ArrowRight,
 } from "lucide-react";
+import Navbar from "@/app/components/Navbar/Navbar";
+import LocationCarousel from "@/app/components/LocationCarousel/LocationCarousel";
 
 export default function HeroSection() {
   return (
     <section className="relative min-h-screen overflow-hidden">
-      {/* Background Image */}
+      {/* Background Image with Parallax */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: "url('/images/hero.jpg')", // Replace with your generated image
+          backgroundImage: "url('/hero.png')",
+          backgroundAttachment: "fixed",
+          backgroundPosition: "center",
         }}
       />
 
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/30" />
 
-      {/* Navigation */}
-      <header className="absolute top-0 left-0 right-0 z-20">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
-          {/* Logo */}
-          <div>
-            <h2 className="text-3xl font-light tracking-wide text-white">
-              <span className="font-semibold text-amber-400">LIGHT</span> TO
-              LIFE
-            </h2>
-            <p className="text-xs uppercase tracking-[4px] text-gray-300">
-              International Ministries
-            </p>
-          </div>
+      {/* Location Carousel */}
+      <div className="absolute top-0 left-0 right-0 z-30">
+        <LocationCarousel />
+      </div>
 
-          {/* Menu */}
-          <nav className="hidden gap-10 text-sm font-medium text-white lg:flex">
-            <a href="#" className="text-amber-400">
-              Home
-            </a>
-            <a href="#">About Us</a>
-            <a href="#">Ministries</a>
-            <a href="#">Missions</a>
-            <a href="#">Get Involved</a>
-            <a href="#">Resources</a>
-            <a href="#">Contact</a>
-          </nav>
-
-          <button className="rounded-full border border-amber-400 px-7 py-3 font-semibold text-amber-400 transition hover:bg-amber-400 hover:text-black">
-            Donate
-          </button>
-        </div>
-      </header>
+      {/* Navigation - Using Navbar Component */}
+      <div className="absolute top-16 left-0 right-0 z-50">
+        <Navbar />
+      </div>
 
       {/* Hero Content */}
-      <div className="relative z-10 flex min-h-screen items-center">
+      <div className="relative z-10 flex min-h-screen items-center pt-40 md:pt-48">
         <div className="mx-auto max-w-7xl px-6">
           <div className="max-w-3xl">
-            <h1 className="leading-none">
-              <span className="block text-6xl font-light text-white md:text-8xl">
-                Bringing
+            <h1 className="leading-none font-cormorant">
+              <span className="block whitespace-nowrap text-6xl font-light text-white md:text-8xl">
+                Bringing <span style={{ color: "var(--gold)" }}>Light.</span>
               </span>
-              <span className="block text-6xl font-light text-amber-400 md:text-8xl">
-                Light.
-              </span>
-              <span className="block text-6xl font-light text-white md:text-8xl">
-                Changing
-              </span>
-              <span className="block text-6xl font-light text-amber-400 md:text-8xl">
-                Lives.
+              <span className="block whitespace-nowrap text-6xl font-light text-white md:text-8xl">
+                Changing <span style={{ color: "var(--gold)" }}>Lives.</span>
               </span>
             </h1>
 
-            <p className="mt-8 max-w-2xl text-xl leading-9 text-gray-200">
+            <p className="font-inter mt-8 max-w-2xl text-xl leading-9 text-gray-200">
               Taking the love and hope of Jesus Christ to the nations and
               transforming communities through the power of the Gospel.
             </p>
 
             {/* Buttons */}
             <div className="mt-10 flex flex-wrap gap-5">
-              <button className="flex items-center gap-2 rounded-lg bg-amber-400 px-8 py-4 font-semibold text-black transition hover:bg-amber-300">
+              <a href="/#features" className="flex items-center gap-2 rounded-lg px-8 py-4 font-semibold text-black transition" style={{ backgroundColor: "var(--gold)", background: "var(--nav-cta-bg)" }}>
                 Our Mission
                 <ArrowRight size={18} />
-              </button>
+              </a>
 
-              <button className="flex items-center gap-3 rounded-lg border border-amber-400 px-8 py-4 font-semibold text-amber-400 transition hover:bg-amber-400 hover:text-black">
+              <a href="/news" className="flex items-center gap-3 rounded-lg border-2 px-8 py-4 font-semibold transition hover:text-black" style={{ borderColor: "var(--gold)", color: "var(--gold)", backgroundColor: "transparent" }} onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--gold)"; e.currentTarget.style.color = "#000"; }} onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "var(--gold)"; }}>
                 <Play size={18} />
-                Watch Our Story
-              </button>
+                Our Stories
+              </a>
             </div>
 
             {/* Feature Cards */}
             <div className="mt-20 grid gap-8 border-t border-white/20 pt-10 md:grid-cols-3">
               <div className="space-y-4">
                 <Globe
-                  className="text-amber-400"
+                  style={{ color: "var(--gold)" }}
                   size={42}
                   strokeWidth={1.5}
                 />
@@ -111,7 +86,7 @@ export default function HeroSection() {
 
               <div className="space-y-4">
                 <HeartHandshake
-                  className="text-amber-400"
+                  style={{ color: "var(--gold)" }}
                   size={42}
                   strokeWidth={1.5}
                 />
@@ -125,7 +100,7 @@ export default function HeroSection() {
 
               <div className="space-y-4">
                 <Users
-                  className="text-amber-400"
+                  style={{ color: "var(--gold)" }}
                   size={42}
                   strokeWidth={1.5}
                 />

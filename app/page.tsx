@@ -39,15 +39,15 @@ const getBranchPriority = (member: PublicTeamMember) => {
   const branchLocation = String(member.branchLocation || "").toLowerCase();
   const displayName = String(member.displayName || "").toLowerCase();
 
-  if (branchKey.includes("mosocho") || branchLocation.includes("mosocho") || displayName.includes("bishop")) {
+  if (branchKey.includes("east-africa-main-church-headquarters") || branchLocation.includes("east africa") || displayName.includes("bishop")) {
     return 0;
   }
 
-  if (branchKey.includes("omogwa") || branchLocation.includes("omogwa") || displayName.includes("reverend")) {
+  if (branchKey.includes("nakuru") || branchLocation.includes("nakuru") || displayName.includes("reverend")) {
     return 1;
   }
 
-  if (branchKey.includes("nyanchwa") || branchLocation.includes("nyanchwa") || displayName.includes("pastor")) {
+  if (branchKey.includes("kisumu") || branchLocation.includes("kisumu") || displayName.includes("pastor")) {
     return 2;
   }
 
@@ -233,7 +233,7 @@ export default function Home() {
           const activeFounder = featuredFounders[Math.min(activeFounderIndex, featuredFounders.length - 1)] || featuredFounders[0];
           const founderTitleLabel = activeFounder.pastorTitle || "Branch Title";
           const founderTitleContext = activeFounder.branchLocation
-            ? ` (${activeFounder.branchLocation}${/mosocho/i.test(String(activeFounder.branchLocation)) ? ", Main headquarter" : ""})`
+            ? ` (${activeFounder.branchLocation}${/east africa|main church headquarters/i.test(String(activeFounder.branchLocation)) ? ", Main headquarter" : ""})`
             : "";
 
           return (
@@ -583,7 +583,7 @@ export default function Home() {
                 </div>
                 <div className={styles.testimonialAuthor}>
                   <strong>Grace Kwamboka</strong>
-                  <span>Omogwa, Kisii</span>
+                  <span>Nakuru</span>
                 </div>
               </div>
 
@@ -603,7 +603,7 @@ export default function Home() {
                 </div>
                 <div className={styles.testimonialAuthor}>
                   <strong>Comfort Mayore</strong>
-                  <span>Nyanchwa, Kisii</span>
+                  <span>Kisumu</span>
                 </div>
               </div>
 
@@ -613,7 +613,7 @@ export default function Home() {
                 </div>
                 <div className={styles.testimonialAuthor}>
                   <strong>Joshua Naipanoi</strong>
-                  <span>Mosocho, Kisii</span>
+                  <span>East Africa - Main Church Headquarters</span>
                 </div>
               </div>
             </div>
