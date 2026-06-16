@@ -4,70 +4,26 @@ import React from "react";
 import Link from "next/link";
 import Navbar from "../components/Navbar/Navbar";
 import styles from "./team.module.css";
+import { adminDb } from '../../lib/server/firebaseAdmin';
+import { LEADERSHIP, TeamMember } from '../../lib/leadership';
 
-type Member = {
-  id: string;
-  name: string;
-  role: string;
-  bio?: string;
-  photo?: string;
-};
-
-const TEAM: Member[] = [
-  {
-    id: "1",
-    name: "Bishop Francis Akaki",
-    role: "Founder & Lead Pastor",
-    bio: "Visionary leader guiding our global ministry and outreach.",
-  },
-  {
-    id: "2",
-    name: "Pastor Charles Maisiba",
-    role: "Director of Community Outreach",
-    bio: "Leads volunteer mobilization and local partnerships.",
-  },
-  {
-    id: "3",
-    name: "Pastor Nicholas Nyarongo",
-    role: "Missions Director",
-    bio: "Oversees international mission projects and partner relations.",
-  },
-  {
-    id: "4",
-    name: "Mary Wanjiru",
-    role: "Finance Director",
-    bio: "Manages finance, compliance, and donor relations.",
-  },
-  {
-    id: "5",
-    name: "Samuel Otieno",
-    role: "Program Coordinator",
-    bio: "Coordinates education and health programs on the ground.",
-  },
-  {
-    id: "6",
-    name: "Grace Mwende",
-    role: "Communications Lead",
-    bio: "Storytells our impact through digital and printed media.",
-  },
-];
-
-const leadership = TEAM.filter((m) =>
-  /director|lead|pastor|founder|bishop|chair/i.test(m.role)
-);
-const members = TEAM.filter((m) => !leadership.includes(m));
-
-function Avatar({ name }: { name: string }) {
-  const initials = name
-    .split(" ")
-    .map((s) => s[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-  return <div className={styles.avatar}>{initials}</div>;
+function dedupeByName(list: TeamMember[]) {
+  const seen = new Set<string>();
+  return list.filter((m) => {
+    const key = (m.name || '').trim().toLowerCase();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
-export default function TeamPage() {
+export default async function TeamPage() {
+  const snapshot = await adminDb.collection('team_members').orderBy('name').get();
+  const firestoreMembers: TeamMember[] = snapshot.docs.map((d) => ({ id: d.id, ...(d.data() as any) }));
+
+  // Merge leadership first so they appear at top, then other members; dedupe by name.
+  const merged = dedupeByName([...LEADERSHIP, ...firestoreMembers]);
+
   return (
     <div className={styles.page}>
       <Navbar />
